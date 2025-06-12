@@ -15,13 +15,13 @@ import java.util.List;
 
 public class ConsultarTasa {
     public TasaConversion consultarTasas(String moneda) {
+        if (moneda.trim().isEmpty()) {
+            throw new DivisaNoValida("La divisa no puede estar vacía.");
+        }
         if (moneda == null) {
             throw new DivisaNoValida("No se encontró esa divisa.");
         }
-        if (moneda.trim().isEmpty()) {
-            throw new DivisaNoValida("La divisa no puede estar vacía");
-        }
-        if (moneda.length() != 3) {
+        if (moneda.length() != 3 && moneda.contains("[a-zA-Z]")) {
             throw new RuntimeException("La moneda debe contener 3 letras.");
         }
 
@@ -55,7 +55,7 @@ public class ConsultarTasa {
 
             return new TasaConversion(divisa, listaMonedas);
         } catch (Exception e) {
-            throw new DivisaNoValida("La divisa " + moneda.toUpperCase() + " no existe o no está soportada."
+            throw new DivisaNoValida("La divisa " + (moneda.isBlank() ? "(No se insertó una moneda)":moneda.toUpperCase())  + " no existe o no está soportada."
                                         + "\nInserte de nuevo la divisa.");
         }
     }

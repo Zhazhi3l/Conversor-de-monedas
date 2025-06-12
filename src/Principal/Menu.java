@@ -10,13 +10,10 @@ public class Menu {
     public static void desplegarMenu() {
         Scanner sc = new Scanner(System.in);
         int i = 1;
-
-        System.out.println("*** Bienvenido/a al conversor de monedas ***");
         while (i >= 1 && i <= 8) {
             try {
                 mostrarOpciones();
-                int opcion = sc.nextInt();
-                sc.nextLine();
+                int opcion = Integer.valueOf(sc.nextLine().trim());
                 ConsultarTasa consultas = new ConsultarTasa();
                 switch (opcion) {
                     case 1:
@@ -28,20 +25,31 @@ public class Menu {
                     case 7:
                         while (true) {
                             try {
+                                // Parte 1: Consultar Tasas de Cambio
                                 System.out.println("Ingrese la abreviación de 3 letras de la moneda que desea convertir:");
                                 var moneda = sc.nextLine();
                                 TasaConversion tasas = new ConsultarTasa().consultarTasas(moneda);
+
+                                // Parte 2: Mostrar tasas de cambio de la primer moneda
                                 System.out.println("¿Desea conocer las tasas de cambio de la moneda " + moneda + "? (S/N)");
                                 var respuesta = sc.nextLine();
-                                if (respuesta.equalsIgnoreCase("S")) {
+                                if (respuesta.equalsIgnoreCase("S") || respuesta.equalsIgnoreCase("SI")
+                                    || respuesta.equalsIgnoreCase("Y") || respuesta.equalsIgnoreCase("YES")) {
                                     System.out.println(tasas.toString());
                                 }
-                                System.out.println("Ingrese la segunda moneda que desea convertir:");
-                                var segMoneda = sc.nextLine();
-                                if(!consultas.verificarMoneda(segMoneda, tasas.getConversion_rates())){
-                                    throw new DivisaNoValida("La divisa " + segMoneda.toUpperCase() + " no existe o no está soportada. Inserte de nuevo ambas divisas.");
+
+                                // Parte 3: Convertir monedas
+                                String segMoneda;
+                                while (true) {
+                                    System.out.println("Ingrese la segunda moneda que desea convertir:");
+                                    segMoneda = sc.nextLine();
+                                    if(consultas.verificarMoneda(segMoneda, tasas.getConversion_rates())){
+                                        break;
+                                    }else{
+                                        System.out.println("La divisa " + segMoneda.toUpperCase() +
+                                                " no existe o no está soportada. Por favor, intente nuevamente.");
+                                    }
                                 }
-                                System.out.println("Ya salió todo bien");
                                 convertirMonedas(tasas, segMoneda);
                                 break;
                             } catch (DivisaNoValida e) {
@@ -55,11 +63,14 @@ public class Menu {
                         break;
                     default:
                         System.out.println("""
-                                Opcion no válida. Por favor, intente nuevamente.
-                                Seleccione  un numero [1-8].
+                                *\t*\t*\t*\t*\t*\t*
+                                Opción no válida. Por favor, intente nuevamente.
+                                Seleccione un número [1-8].
                                 7 si desea seleccionar otra divisa.
                                 8 para salir.
+                                *\t*\t*\t*\t*\t*\t*
                                 """);
+                        i=1;
                         break;
                 }
             } catch (NumberFormatException e) {
@@ -67,7 +78,7 @@ public class Menu {
             } catch (DivisaNoValida e) {
                 System.out.println(e.getMessage());
             } catch (RuntimeException e) {
-                System.out.println("Error " + e.getMessage());
+                System.out.println("Error: " + e.getMessage());
             }
         }
         sc.close();
@@ -78,16 +89,17 @@ public class Menu {
     }
 
     private static void mostrarOpciones() {
-        System.out.println("*************************************************************");
-        System.out.println("Ingrese el numero de la opción que desea realizar:");
-        System.out.println("1) Dólares Americanos[USD] =>> Peso Argentino[ARS]");
-        System.out.println("2) Peso Argentino[ARS] =>> Dólares Americanos[USD]");
-        System.out.println("3) Dólares americanos[USD] =>> Peso Chileno[CLP]");
-        System.out.println("4) Peso Chileno[CLP] =>> Dólares Americanos[USD]");
-        System.out.println("5) Peso Chileno[CLP] =>> Peso Argentino[ARS]");
-        System.out.println("6) Peso Argentino[ARS] =>> Peso Chileno[CLP]");
-        System.out.println("7) Consultar Tasas de Cambio");
-        System.out.println("8) Salir");
-        System.out.println("*************************************************************");
+        System.out.println("""
+                *** Bienvenido/a al conversor de monedas ***
+                Ingrese el numero de la opción que desea realizar:
+                1) Dólares Americanos[USD] =>> Peso Argentino[ARS]
+                2) Peso Argentino[ARS] =>> Dólares Americanos[USD]
+                3) Dólares americanos[USD] =>> Peso Chileno[CLP]
+                4) Peso Chileno[CLP] =>> Dólares americanos[USD]
+                5) Peso Chileno[CLP] =>> Peso Argentino[ARS]
+                6) Peso Argentino[ARS] =>> Peso Chileno[CLP]
+                7) Consultar Tasas de Cambio
+                8) Salir
+                *************************************************************""");
     }
 }
