@@ -1,9 +1,11 @@
 package Principal;
 
 import BusquedasYTransformaciones.ConsultarTasa;
+import Clases.Moneda;
 import Clases.TasaConversion;
 import Excepciones.DivisaNoValida;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class Menu {
@@ -85,7 +87,26 @@ public class Menu {
     }
 
     private static void convertirMonedas(TasaConversion tasas, String segMoneda) {
+        Scanner sc = new Scanner(System.in);
+        Moneda primeraMoneda = new Moneda(tasas.getBase_code(), tasas.getConversion_rates().get(0).getValor());
+        Moneda segundaMoneda = buscarMonedaEnLista(segMoneda, tasas.getConversion_rates());
 
+        System.out.println("¿Que cantidad desea convertir de: "+ "[" + primeraMoneda.getNombre() + "] =>>> " + "[" + segundaMoneda.getNombre() + "]?");
+        double valorAConvertir = Double.valueOf(sc.nextLine().trim()); sc.close();
+        double valorFinal = valorAConvertir * segundaMoneda.getValor();
+
+        String resultado = "El valor de " + valorAConvertir + "[" + primeraMoneda.getNombre() + "]"
+                + " corresponde al valor final de =>>> " + valorFinal + "[" + segundaMoneda.getNombre() + "]";
+        System.out.println(resultado);
+    }
+
+    private static Moneda buscarMonedaEnLista(String moneda, List<Moneda> listaMonedas) {
+        for (Moneda buscada : listaMonedas) {
+            if (buscada.getNombre().equalsIgnoreCase(moneda)) {
+                return buscada;
+            }
+        }
+        return null; // Si llegó aquí algo muy malo pasó aquí. Jaja
     }
 
     private static void mostrarOpciones() {
