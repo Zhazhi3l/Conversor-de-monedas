@@ -36,7 +36,7 @@ public class Menu {
                                 System.out.println("¿Desea conocer las tasas de cambio de la moneda " + moneda + "? (S/N)");
                                 var respuesta = sc.nextLine();
                                 if (respuesta.equalsIgnoreCase("S") || respuesta.equalsIgnoreCase("SI")
-                                    || respuesta.equalsIgnoreCase("Y") || respuesta.equalsIgnoreCase("YES")) {
+                                        || respuesta.equalsIgnoreCase("Y") || respuesta.equalsIgnoreCase("YES")) {
                                     System.out.println(tasas.toString());
                                 }
 
@@ -45,9 +45,9 @@ public class Menu {
                                 while (true) {
                                     System.out.println("Ingrese la segunda moneda que desea convertir:");
                                     segMoneda = sc.nextLine();
-                                    if(consultas.verificarMoneda(segMoneda, tasas.getConversion_rates())){
+                                    if (consultas.verificarMoneda(segMoneda, tasas.getConversion_rates())) {
                                         break;
-                                    }else{
+                                    } else {
                                         System.out.println("La divisa " + segMoneda.toUpperCase() +
                                                 " no existe o no está soportada. Por favor, intente nuevamente.");
                                     }
@@ -72,11 +72,11 @@ public class Menu {
                                 8 para salir.
                                 *\t*\t*\t*\t*\t*\t*
                                 """);
-                        i=1;
+                        i = 1;
                         break;
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Debe ingresar un numero [1-6].");
+                System.out.println("Debe ingresar un numero [1-8].");
             } catch (DivisaNoValida e) {
                 System.out.println(e.getMessage());
             } catch (RuntimeException e) {
@@ -91,13 +91,21 @@ public class Menu {
         Moneda primeraMoneda = new Moneda(tasas.getBase_code(), tasas.getConversion_rates().get(0).getValor());
         Moneda segundaMoneda = buscarMonedaEnLista(segMoneda, tasas.getConversion_rates());
 
-        System.out.println("¿Que cantidad desea convertir de: "+ "[" + primeraMoneda.getNombre() + "] =>>> " + "[" + segundaMoneda.getNombre() + "]?");
-        double valorAConvertir = Double.valueOf(sc.nextLine().trim()); sc.close();
-        double valorFinal = valorAConvertir * segundaMoneda.getValor();
+        while (true) {
+            try {
+                System.out.println("¿Que cantidad desea convertir de: " + "[" + primeraMoneda.getNombre() + "] =>>> " + "[" + segundaMoneda.getNombre() + "]?");
+                double valorAConvertir = Double.valueOf(sc.nextLine().trim());
+                sc.close();
+                double valorFinal = valorAConvertir * segundaMoneda.getValor();
 
-        String resultado = "El valor de " + valorAConvertir + "[" + primeraMoneda.getNombre() + "]"
-                + " corresponde al valor final de =>>> " + valorFinal + "[" + segundaMoneda.getNombre() + "]";
-        System.out.println(resultado);
+                String resultado = "El valor de " + valorAConvertir + "[" + primeraMoneda.getNombre() + "]"
+                        + " corresponde al valor final de =>>> " + valorFinal + "[" + segundaMoneda.getNombre() + "]";
+                System.out.println(resultado);
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("Debe ingresar un valor unitario a convertir.");
+            }
+        }
     }
 
     private static Moneda buscarMonedaEnLista(String moneda, List<Moneda> listaMonedas) {
