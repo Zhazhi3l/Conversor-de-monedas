@@ -21,8 +21,10 @@ public class Menu {
                     case 1:
                         //tasas = new ConsultarTasa().consultarTasas("USD");
                         //tasas.convertirMonedas("USD", "ARS");
+                        //TasaConversion tasas = new ConsultarTasa().consultarTasas("USD");
 
-                        i = 0;
+
+                        i = repetirOperaciones() ? 1 : 0;
                         break;
                     case 7:
                         while (true) {
@@ -30,7 +32,7 @@ public class Menu {
                                 // Parte 1: Consultar Tasas de Cambio
                                 System.out.println("Ingrese la abreviación de 3 letras de la moneda que desea convertir:");
                                 var moneda = sc.nextLine();
-                                TasaConversion tasas = new ConsultarTasa().consultarTasas(moneda);
+                                TasaConversion tasas = consultas.consultarTasas(moneda);
 
                                 // Parte 2: Mostrar tasas de cambio de la primer moneda
                                 System.out.println("¿Desea conocer las tasas de cambio de la moneda " + moneda + "? (S/N)");
@@ -58,7 +60,7 @@ public class Menu {
                                 System.out.println(e.getMessage());
                             }
                         }
-                        i = 0;
+                        i = repetirOperaciones() ? 1 : 0;
                         break;
                     case 8:
                         i = 0;
@@ -67,8 +69,8 @@ public class Menu {
                         System.out.println("""
                                 *\t*\t*\t*\t*\t*\t*
                                 Opción no válida. Por favor, intente nuevamente.
-                                Seleccione un número [1-8].
-                                7 si desea seleccionar otra divisa.
+                                Seleccione un número [1-8],
+                                7 si desea seleccionar otras divisa,
                                 8 para salir.
                                 *\t*\t*\t*\t*\t*\t*
                                 """);
@@ -84,6 +86,23 @@ public class Menu {
             }
         }
         sc.close();
+        System.out.println("""
+                Gracias por usar el conversor de monedas. :)
+                Saliendo...
+                """);
+    }
+
+    private static boolean repetirOperaciones() {
+        while (true){
+            System.out.println("¿Desea realizar otra operación? (S/N)");
+            var respuesta = new Scanner(System.in).nextLine();
+            if (respuesta.equalsIgnoreCase("S") || respuesta.equalsIgnoreCase("SI")
+                    || respuesta.equalsIgnoreCase("Y") || respuesta.equalsIgnoreCase("YES")) {
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
 
     private static void convertirMonedas(TasaConversion tasas, String segMoneda) {
