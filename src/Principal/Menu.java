@@ -17,13 +17,11 @@ public class Menu {
                 mostrarOpciones();
                 int opcion = Integer.valueOf(sc.nextLine().trim());
                 ConsultarTasa consultas = new ConsultarTasa();
+                TasaConversion tasas;
                 switch (opcion) {
                     case 1:
-                        //tasas = new ConsultarTasa().consultarTasas("USD");
-                        //tasas.convertirMonedas("USD", "ARS");
-                        //TasaConversion tasas = new ConsultarTasa().consultarTasas("USD");
-
-
+                        tasas = new ConsultarTasa().consultarTasas("USD");
+                        convertirMonedas(tasas, "ARS");
                         i = repetirOperaciones() ? 1 : 0;
                         break;
                     case 7:
@@ -32,7 +30,7 @@ public class Menu {
                                 // Parte 1: Consultar Tasas de Cambio
                                 System.out.println("Ingrese la abreviación de 3 letras de la moneda que desea convertir:");
                                 var moneda = sc.nextLine();
-                                TasaConversion tasas = consultas.consultarTasas(moneda);
+                                tasas = consultas.consultarTasas(moneda);
 
                                 // Parte 2: Mostrar tasas de cambio de la primer moneda
                                 System.out.println("¿Desea conocer las tasas de cambio de la moneda " + moneda + "? (S/N)");
@@ -93,29 +91,29 @@ public class Menu {
     }
 
     private static boolean repetirOperaciones() {
-        while (true){
-            System.out.println("¿Desea realizar otra operación? (S/N)");
-            var respuesta = new Scanner(System.in).nextLine();
-            if (respuesta.equalsIgnoreCase("S") || respuesta.equalsIgnoreCase("SI")
-                    || respuesta.equalsIgnoreCase("Y") || respuesta.equalsIgnoreCase("YES")) {
-                return true;
-            } else {
-                return false;
-            }
+        System.out.println("¿Desea realizar otra operación? (S/N)");
+        var respuesta = new Scanner(System.in).nextLine();
+        if (respuesta.equalsIgnoreCase("S") || respuesta.equalsIgnoreCase("SI")
+                || respuesta.equalsIgnoreCase("Y") || respuesta.equalsIgnoreCase("YES")) {
+            return true;
+        } else {
+            return false;
         }
     }
 
     private static void convertirMonedas(TasaConversion tasas, String segMoneda) {
         Scanner sc = new Scanner(System.in);
-        Moneda primeraMoneda = new Moneda(tasas.getBase_code(), tasas.getConversion_rates().get(0).getValor());
+        Moneda primeraMoneda = new Moneda(tasas.getBase_code(), 1);
         Moneda segundaMoneda = buscarMonedaEnLista(segMoneda, tasas.getConversion_rates());
 
         while (true) {
             try {
                 System.out.println("¿Que cantidad desea convertir de: " + "[" + primeraMoneda.getNombre() + "] =>>> " + "[" + segundaMoneda.getNombre() + "]?");
                 double valorAConvertir = Double.valueOf(sc.nextLine().trim());
-                sc.close();
                 double valorFinal = valorAConvertir * segundaMoneda.getValor();
+
+                // Más precisión con 2 decimales
+                valorFinal = Math.round(valorFinal * 100.0) / 100.0;
 
                 String resultado = "El valor de " + valorAConvertir + "[" + primeraMoneda.getNombre() + "]"
                         + " corresponde al valor final de =>>> " + valorFinal + "[" + segundaMoneda.getNombre() + "]";
@@ -140,10 +138,10 @@ public class Menu {
         System.out.println("""
                 *** Bienvenido/a al conversor de monedas ***
                 Ingrese el numero de la opción que desea realizar:
-                1) Dólares Americanos[USD] =>> Peso Argentino[ARS]
-                2) Peso Argentino[ARS] =>> Dólares Americanos[USD]
-                3) Dólares americanos[USD] =>> Peso Chileno[CLP]
-                4) Peso Chileno[CLP] =>> Dólares americanos[USD]
+                1) Dólares Estadounidenses[USD] =>> Peso Argentino[ARS]
+                2) Peso Argentino[ARS] =>> Dólares Estadounidenses[USD]
+                3) Dólares Estadounidenses[USD] =>> Peso Chileno[CLP]
+                4) Peso Chileno[CLP] =>> Dólares Estadounidenses[USD]
                 5) Peso Chileno[CLP] =>> Peso Argentino[ARS]
                 6) Peso Argentino[ARS] =>> Peso Chileno[CLP]
                 7) Consultar Tasas de Cambio
