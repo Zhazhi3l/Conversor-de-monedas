@@ -24,6 +24,31 @@ public class Menu {
                         convertirMonedas(tasas, "ARS");
                         i = repetirOperaciones() ? 1 : 0;
                         break;
+                    case 2:
+                        tasas = new ConsultarTasa().consultarTasas("ARS");
+                        convertirMonedas(tasas, "USD");
+                        i = repetirOperaciones() ? 1 : 0;
+                        break;
+                    case 3:
+                        tasas = new ConsultarTasa().consultarTasas("USD");
+                        convertirMonedas(tasas, "CLP");
+                        i = repetirOperaciones() ? 1 : 0;
+                        break;
+                    case 4:
+                        tasas = new ConsultarTasa().consultarTasas("CLP");
+                        convertirMonedas(tasas, "USD");
+                        i = repetirOperaciones() ? 1 : 0;
+                        break;
+                    case 5:
+                        tasas = new ConsultarTasa().consultarTasas("CLP");
+                        convertirMonedas(tasas, "ARS");
+                        i = repetirOperaciones() ? 1 : 0;
+                        break;
+                    case 6:
+                        tasas = new ConsultarTasa().consultarTasas("ARS");
+                        convertirMonedas(tasas, "CLP");
+                        i = repetirOperaciones() ? 1 : 0;
+                        break;
                     case 7:
                         while (true) {
                             try {
